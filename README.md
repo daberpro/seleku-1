@@ -223,6 +223,22 @@ $ku('h1').hapusNilaiAttr('class', 'judul');
 
 ```
 
+#### $Reactive function
+##### ```$Reactive``` adalah suatu build-in function di dalam seleku yang bisa di gunakan untuk membuat custom reactivity dari variabel yang di inginkan (variabel harus bertipe data objek)
+
+#### contoh
+
+```js
+let name = "Daber";
+let old = 17;
+let reactivity_of_my_variabel = $Reactive({name,old});
+
+//jika kita ingin mengupdate nilai secara reaktif fi my_data 
+//maka cukup ubah dari reactivity_of_my_variabel dengan cara mengakses properties nya
+//contoh 
+reactivity_of_my_variabel.name = "Aris"; //maka variabel name akan berubah menjadi "Aris"
+```
+
 ## dynamic attribute di `selek`
 #### dynamic attribute adalah attribute yang memiliki reaktivitas dan memungkinkan terjadinya perubahan attribute itu sendiri secara realtime
 #### Contoh
@@ -355,3 +371,5 @@ let twoProps = {
 </script>
 
 ```
+
+
