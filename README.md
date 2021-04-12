@@ -320,3 +320,38 @@ let twoProps = {
     },
 };
 ```
+## Seleku Special Syntax
+#### di seleku juga terdapat beberapa syntax yang cukup uni atau spesial yang meiliki keguanaan dan fungsi tertentu
+#### 1. ```#head#```
+##### #head# di gunakan untuk menempatkan suatu html element ke dalam tag head di html yang di tuju (seleku secara default hanya memanipulasi element di body) sebagai contoh jika ingin meletakan tag title di head dari seleku
+
+```HTML
+
+#head#
+	<title>belajar seleku</title>
+#head#
+
+<html>
+
+	<h1 class="pad-10px p-t-20px">{namaku}</h1>
+	<input type="text" oninput="input(this)" name="">
+
+</html>
+
+<style type="text/css">
+	h1{
+		color: red;
+		font-family: sans-serif;
+	}
+</style>
+
+<script type="text/javascript">
+	let namaku = "budiman";
+	
+	function input(element){
+		contexts.namaku = element.value;
+		contexts.my_id = element.value;
+	}
+</script>
+
+```
