@@ -5,8 +5,10 @@ let allElement = [];
 let allElementAttribute = [];
 let allElements = [];
 let {
-    ["log"]: _c, ["error"]: _e
+    ["log"]: _$c, ["error"]: _$e
 } = console;
+window._$all_attribute = [];
+
 let Name;
 
 let selekDOM = (element) => {
@@ -14,9 +16,29 @@ let selekDOM = (element) => {
     if (body.children.length !== 0 && !element) {
 
         child = body.children;
+        for(let _$x of child){
+            let attr = {..._$x.attributes};
+            for(let __$x in attr){
+                _$all_attribute.push({
+                    name: attr[__$x].name,
+                    value: attr[__$x].value,
+                    element: attr[__$x].ownerElement
+                });
+            }
+        }
 
     } else {
         child = element.children;
+        for(let _$x of child){
+            let attr = {..._$x.attributes};
+            for(let __$x in attr){
+                _$all_attribute.push({
+                    name: attr[__$x].name,
+                    value: attr[__$x].value,
+                    element: attr[__$x].ownerElement
+                });
+            }
+        }
     }
 
 
@@ -34,7 +56,6 @@ let selekDOM = (element) => {
                 if(attrOfElement === void 0){
                    attrOfElement =  attr.getAttribute("class").split(" ");
                 }
-
                
                 for (let attrOfElementStyle of attrOfElement) {
                     if (attrOfElementStyle.split(/-/igm).length === 3) {
@@ -57,7 +78,7 @@ let selekDOM = (element) => {
         for (let el of child) {
 
             if (el.toString() === document.createElement("script").toString()) {
-                //do something
+                //do something 
             } else {
                 let content = el.innerHTML;
                 let theMain = content.replace(/{/igm, " {").replace(/}/igm, "} ").split(" ");
@@ -96,17 +117,22 @@ let selekDOM = (element) => {
                         context.forEach((cont) => {
                             allElement.push({
                                 element: el,
+                                attr: el.attributes,
                                 bindTo: cont.replace(/{/igm, "").replace(/}/igm, "")
                             });
                             try {
-                                eval(cont.replace(/{/igm, "").replace(/}/igm, ""));
-
-                                el.innerHTML = el.innerHTML.replace(cont, eval(cont.replace(/{/igm, "").replace(/}/igm, "")));
+                                let _$js_to_html_value = eval(cont.replace(/{/igm, "").replace(/}/igm, ""));
+                                if(_$js_to_html_value instanceof HTMLElement){
+                                    el.textContent = el.textContent.replace(/{.*?}/igm,"");
+                                    el.appendChild(_$js_to_html_value);
+                                }else{
+                                    el.innerHTML = el.innerHTML.replace(cont, eval(cont.replace(/{/igm, "").replace(/}/igm, "")));
+                                }
 
                             } catch (err) {
                                 if (err) {
-                                    _e(`the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define`);
-                                    el.innerHTML = el.innerHTML.replace(cont, `<b class="danger"> ${cont.replace(/{/igm,"").replace(/}/igm,"")} </b>`)
+                                    _$e(`the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define`);
+                                    el.innerHTML = el.innerHTML.replace(cont, `<b class="danger">error the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define at ${parentElement.innerHTML}</b>`)
                                 }
                             }
                         });
@@ -129,18 +155,16 @@ let selekDOM = (element) => {
 
 let reactive = () => {
 
-    window.contexts = {
-        main: "main"
-    };
+    window.contexts = {};
 
     try {
 
-        allElementAttribute.forEach((_i) => {
-            if (_i.attr) {
-                contexts[_i.attr] = eval(_i.attr);
+        allElementAttribute.forEach((_$i) => {
+            if (_$i.attr) {
+                contexts[_$i.attr] = eval(_$i.attr);
             }
-            if (_i.bindTo) {
-                contexts[_i.bindTo] = eval(_i.bindTo);
+            if (_$i.bindTo) {
+                contexts[_$i.bindTo] = eval(_$i.bindTo);
             }
         });
 
@@ -162,93 +186,44 @@ let reactive = () => {
             for (let obj in object) {
                 if (object.hasOwnProperty(obj)) {
                     reactivity(object, obj);
+
                 }
             }
         }
 
         function notify(name) {
 
-            allElements.forEach((_i) => {
+            allElements.forEach((_$i) => {
                 try {
-                    if (_i.value === "" || _i.value !== "" && typeof _i.value === "string") {
-                        _i.value = eval(_i.getAttribute("this:bind").replace(/{/igm, "").replace(/}/igm, "")).toString();
-                        _i.oninput = () => {
-                            allElementAttribute.forEach((_j) => {
-                                name = _i.getAttribute("this:bind").replace(/{/igm, "").replace(/}/igm, "");
-                                if (name == _j.bindTo) {
-                                    contexts[name] = `${_i.value}`;
-                                    eval(`${name} = "${_i.value}"`);
-                                    _j.element.innerHTML = eval(name);
-                                }
-
-                            });
+                    allElementAttribute.forEach((j) => {
+                        
+                        if (name == j.bindTo) {
+                            eval(`${name} = ${contexts[name]}`);
+                            if(typeof eval(name) === "string" || typeof eval(name) === "number"){
+                                j.element.textContent  = eval(name);
+                            }else{
+                                j.element.textContent = contexts[name];
+                            }
+                        }else{
+                            eval(`${name} = ${contexts[name]}`);
                         }
 
-                    } else {
-                        allElementAttribute.forEach((_j) => {
-                            try {
-                                if (name == _j.bindTo) {
-                                    eval(`${name} = ${contexts[name]}`);
-                                    _j.element.innerHTML = eval(name);
-                                }
-                            } catch (err) {
-                                eval(`${name} = ${contexts[name]}`);
-                                _j.element.innerHTML = eval(name);
-                            }
-
-                        });
-                    }
+                    });
 
                 } catch (err) {
-                    allElementAttribute.forEach((_j) => {
-                        if (name === _j.attr) {
-                            let g = {..._j.element.attributes
-                            };
+                    allElementAttribute.forEach((j) => {
+               
 
-                            if (Name === undefined) {
-                                for (let x in g) {
-                                    if (g[x].value.match(/\{(.*?)\}/)) {
-
-                                        try {
-                                            if(g[x].name === "this:bind"){
-                                                return;
-                                            }
-                                            eval(`${name} = "${contexts[name]}"`);
-                                            _j.element.setAttribute(g[x].name, contexts[name]);
-                                            Name = g[x].name;
-                                        } catch (error) {
-                                            e(error)
-
-                                        }
-
-
-                                    }
-
-                                }
-                            } else {
-
-                                try {
-                                    eval(`${name} = "${contexts[name]}"`);
-                                    _j.element.setAttribute(Name, contexts[name]);
-
-                                } catch (error) {
-                                    e(error)
-                                }
-                            }
-                        }
-
-                        if (name == _j.bindTo) {
+                        if (name == j.bindTo) {
 
                             try {
-                                try {
-                                    eval(`${name} = ${contexts[name]}`);
-                                } catch (err) {
-                                    eval(`${name} = "${contexts[name]}"`);
-                                };
+                                eval(`${name} = ${contexts[name]}`);
 
-                                _j.element.innerHTML = contexts[name];
+                                j.element.textContent = contexts[name];
 
                             } catch (err) {
+                                eval(`${name} = \`${contexts[name]}\``);
+                                j.element.textContent = contexts[name];
                                 return;
                             
                             }
@@ -258,11 +233,18 @@ let reactive = () => {
                     });
                 }
             });
+            new DynamicAttribute().createDynamic();
+            _$all_attribute.forEach((j) => {
+                if(/\{/igm.test(j.value) && /\{/igm.test(j.value)){
+                    let nameofattr = j.value.trim().replace(/\{/igm,"").replace(/\}/igm,""); 
+                    new DynamicAttribute().getAttribute(j.element,nameofattr,j.name);
+                }
+                return;
+            });
 
         }
 
         setReactivity(contexts);
-        contexts.main = contexts.main;
 
 
     } catch (err) {
@@ -278,6 +260,7 @@ const binding = () => {
                     if (element.attr[x].value.match(/\{(.*?)\}/)) {
                         allElementAttribute.push({
                             element: element.element,
+                            bindTo: element.bindTo,
                             attr: element.attr[x].value.replace(/{/igm, "").replace(/}/igm, "")
                         });
                     }
@@ -287,16 +270,21 @@ const binding = () => {
         } else {
             allElementAttribute.push({
                 element: element.element,
-                bindTo: element.bindTo
+                bindTo: element.bindTo,
             });
         }
 
     });
+
+    
 }
 
 window.onload = () => {
     selekDOM();
     binding();
     reactive();
+    for(let x in contexts){
+        contexts[x] = contexts[x];
+    }
     new JOSS({class:"",element:""}).update();
 }

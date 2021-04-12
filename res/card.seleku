@@ -1,7 +1,13 @@
+#head#
+
+
+#head#
+
 <html>
-
-	<h1>{namaku}</h1>	
-
+	<div class="my-box bg-i-https://tse3.mm.bing.net/th?id=OIP.QOxjPkMTk67rZobAFvqangHaEK&pid=ImgDet&rs=1"></div>
+	<h1 id={$angka} name={namaku}>seleku {namaku}</h1>
+	<button id={namaku} onclick="kan()">add</button>
+	<input type="text" name="" value="daber" oninput="input(this)">
 </html>
 
 <style type="text/css">
@@ -9,8 +15,27 @@
 		color: red;
 		font-family: sans-serif;
 	}
+	.my-box{
+		width: 300px;
+		height: 200px;
+		background: salmon;
+		border-radius: 10px;
+	}
 </style>
 
 <script type="text/javascript">
-	let namaku = "budiman";
+	let namaku = "hello";
+	let $angka = 1;
+
+	// const $var = $Reactive({_mynumbers});
+
+	function kan(){
+		contexts.$angka += 1;
+	}
+
+	function input(el){
+		contexts.namaku = el.value;
+	}
+
 </script>
+

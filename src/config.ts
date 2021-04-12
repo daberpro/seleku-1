@@ -1,7 +1,8 @@
 let declaration: string[] = [
     "#html",
     "#css",
-    "#js"
+    "#js",
+    "#head"
 ];
 
 exports.declarate = (query: string): string[]=>{

@@ -74,6 +74,7 @@ module.exports.compile = async (args): Promise<void> =>{
 		let Html : string[] = [];
 		let Css : string[] = [];
 		let Js : string[] = [];
+		let Head : string[] = [];
 
 	// ============================================================
 
@@ -97,6 +98,9 @@ module.exports.compile = async (args): Promise<void> =>{
 			if(/\#*\js/igm.test(tokens_of_seleku)){
 				Js = [tokens_of_seleku];
 			}
+			if(/\#*\head/igm.test(tokens_of_seleku)){
+				Head = [tokens_of_seleku];
+			}
 		});
 
 	// ============================================================
@@ -116,9 +120,6 @@ module.exports.compile = async (args): Promise<void> =>{
 				final_data_to_ast.push({el: lexer.element,col: lexer.col, pos: position,token: lexer.token,type: lexer.is});
 
 			}else if(lexer.type === typeOfElement[1]){
-				// =========== before ==========
-				// final_data_to_ast.push({el: lexer.element,col: lexer.col, pos: position,token: lexer.token,type: lexer.is});
-				// =========== after ============
 				position++
 				final_data_to_ast.push({el: lexer.element,col: lexer.col, pos: position,token: lexer.token,type: lexer.is});
 			}
@@ -128,7 +129,7 @@ module.exports.compile = async (args): Promise<void> =>{
 
 		});
 		final_data_to_ast[-1] = {el: [],col: -1,pos: -1,token:"",type: "nothing"}
-		AST(final_data_to_ast,lexer_result,Css,Js,args);
+		AST(final_data_to_ast,lexer_result,Css,Js,Head,args);
 
 
 		// c(tokens);

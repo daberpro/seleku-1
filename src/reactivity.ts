@@ -14,8 +14,9 @@ class $Reactivity{
 		for(let _x in _main){
 			try{
 				eval(`${_x} = ${_main[_x]}`);
+				
 			}catch(err){
-				console.warn("can't to set from object reactive to global");
+				eval(`${_x} = "${_main[_x]}"`);
 			}
 		}
 	}
@@ -33,6 +34,7 @@ class $Reactivity{
 			},
 			set($fn: any){
 				_event(this);
+				
 				try{
 					_data = $fn();
 				}catch(err){
@@ -50,7 +52,7 @@ class $Reactivity{
 			try{
 				eval(`this._main[_x] = ${_x}`);
 			}catch(err){
-				console.warn("the global variabel "+_x+" is not found ")
+				
 			}
 			this.setReactivity(this._main,_x);
 		}
@@ -61,5 +63,5 @@ class $Reactivity{
 }
 
 let $Reactive = (args: object, event: Function)=>{
-	contexts = {...contexts,...new $Reactivity(args,event).init()};
+	return (new $Reactivity(args,event).init());
 }

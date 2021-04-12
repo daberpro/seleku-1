@@ -1,0 +1,1 @@
+RenderCustomElementToHead(@head_components);

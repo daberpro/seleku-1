@@ -2,7 +2,6 @@ let fs = require("fs");
 let path = require("path");
 let {grammar} = require("./grammar");
 let nodeParser = require('node-html-parser');
-let html_parent = require('html-element').document;
 let {
 	tokens_all
 } = require("./tokens_all");
@@ -35,7 +34,7 @@ exports.getDataFile = (file_name: string): Promise<data> =>{
 		fs.open(file_name,"r",(err: any,data: any): void =>{
 
 			fs.readFile(data,(err: any,_data: any)=>{
-				let a: string[] = _data.toString("utf-8").replace(/\<html>/igm,"#html").replace(/\<*\/html>/igm,"#html").replace(/\<style.*?\>/igm,"#css").replace(/\<*\/style>/igm,"#css").replace(/\<script.*?\>/igm,"#js").replace(/\<*\/script>/igm,"#js").split(/\n/);
+				let a: string[] = _data.toString("utf-8").replace(/\<html>/igm,"#html").replace(/\<*\/html>/igm,"#html").replace(/\<style.*?\>/igm,"#css").replace(/\<*\/style>/igm,"#css").replace(/\<script.*?\>/igm,"#js").replace(/\<*\/script>/igm,"#js").replace(/\#head#/igm,"#head").split(/\n/);
 				let numbers : number | undefined = 0;
 				let data_of_html: Array<html> = [];
 				let elements:string = "";
@@ -181,7 +180,7 @@ enum tag{
 	closeTag
 }
 
-exports.AST = (args: Array<final_data>, lex: string[][],css: string[],js: string[],config)=>{
+exports.AST = (args: Array<final_data>, lex: string[][],css: string[],js: string[],head: string[],config: any)=>{
 
     let openTag: any[] = [];
     let closeTag: any[] = [];
@@ -282,6 +281,59 @@ exports.AST = (args: Array<final_data>, lex: string[][],css: string[],js: string
 
 	}
 
+	let convert_others = (argv:any,something: any)=>{
+
+		if(argv.parent && argv.text || argv.name && argv.parent){
+			something.push({
+				parentElement: argv.parent,
+				tagName: argv.name,
+				id: argv.id,
+				text: argv.text,
+				parentId: argv.parentId,
+				attr: argv.attr
+			});
+		}
+
+		let index : number = 0;
+
+		if(argv.child.length > 0){
+			argv.child.forEach(({...children}: any,_index: number) =>{
+
+				if(children.childNodes.length > 0 && children.rawTagName){
+					convert_others({
+						child: children.childNodes,
+						parent: argv.name,
+						parentId: argv.id,
+						id: CREATE_UUID(),
+						name: children.rawTagName,
+						attr: children.rawAttrs
+					},something);
+				}else{
+					convert_others({
+						child: children.childNodes,
+						parent: argv.name,
+						parentId: argv.id,
+						id: CREATE_UUID(),
+						name: children.rawTagName,
+						attr: children.rawAttrs
+					},something);
+				}
+				if(children.rawText && children.rawText.trim().length > 0){
+					convert_others({
+						child: children.childNodes,
+						parent: argv.name,
+						parentId: argv.id,
+						text: children.rawText,
+						id: CREATE_UUID(),
+						name: children.rawTagName,
+						attr: children.rawAttrs
+					}, something);
+				}
+			});
+		}
+
+	}
+
 	let all_string : string = "";
 
     lex.forEach(el =>{
@@ -346,24 +398,47 @@ exports.AST = (args: Array<final_data>, lex: string[][],css: string[],js: string
 		return !($el.tagName === void 0 && $el.text === void 0);
 	});
 
+	let documentHead = fs.readFileSync(__dirname+"/DocumentHead.js").toString("utf-8");
     let config_file = fs.readFileSync(__dirname+"/user.config.js").toString("utf-8");
     let file_name = path.basename(config.file).match(/\.*\w*/)[0];
     let joss = fs.readFileSync(__dirname+"/joss.js").toString("utf-8");
     let seleku_embed = fs.readFileSync(__dirname+"/seleku-embbeded.js").toString("utf-8");
+    let dynamic_attribute = fs.readFileSync(__dirname+"/dynamic-attribute.js");
+    let JavaScript_from_dev = `(async ()=>{
+			//your javascript code will be show here
+
+			${js.join("\n").replace(/#js/,"")}
+		})();`;
+	let $head_data_parser : string = "";
+	head.forEach($child =>{
+		$head_data_parser += $child.trim().replace("#head","");
+	});
+	let $head_data : any = {...nodeParser.parse($head_data_parser)};
+	let $head_result: any = [];
+	convert_others({
+    	child: $head_data.childNodes,
+    	name: "head",
+    	id: 0,
+    	parentId: 0
+    },$head_result);
+    $head_result = JSON.parse(JSON.stringify($head_result));
     let a = new grammar({
 		path:config.dirOut,
 		file_name: file_name+".js",
 		config: "",
-		content: `${(!config.isComponent)? fs.readFileSync(__dirname+"/reactivity.js"): ""}
+		content: `
+		${(!config.isComponent)? fs.readFileSync(__dirname+"/reactivity.js"): ""}
 		let components_${file_name} = [{name: "seleku-${file_name}",element: ${convertToText($element)}, css: \`${css.join(" ").replace(/\n/igm," ").replace(/\#css/igm,"")}\`}];\n
+		let head_elements_${file_name} = ${convertToText($head_result)};
 		${(!config.isComponent)?  fs.readFileSync(__dirname+"/seleku-components.js"): ""}
 		${config_file.replace(/\@seleku_pre/igm,"components_"+file_name).replace(/\@seleku_selector/igm,`"${config.renderTarget}"`)}
-		${(!config.isComponent)? joss : ""}
-		${(!config.isComponent)? seleku_embed : ""}
-		${js.join("\n").replace(/#js/,"")}
+		${documentHead.replace(/\@head_components/igm,"head_elements_"+file_name)}
+		${(!config.isComponent)? joss : ""}${(!config.isComponent)? dynamic_attribute : ""}${(!config.isComponent)? seleku_embed : ""}
+		${(config.asyncMode === "on")? JavaScript_from_dev : js.join("\n").replace(/#js/,"")}
 		`
 	});
 
+    console.log(`${file_name}.seleku --> ${file_name}.js`,"color: orange");
 	a.write();
 
     // console.log(openTag,closeTag)

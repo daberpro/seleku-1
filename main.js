@@ -8,7 +8,7 @@ class $Reactivity {
       try {
         eval(`${_x} = ${_main[_x]}`);
       } catch (err) {
-        console.warn("can't to set from object reactive to global");
+        eval(`${_x} = "${_main[_x]}"`);
       }
     }
   }
@@ -35,70 +35,83 @@ class $Reactivity {
     for (let _x in this._main) {
       try {
         eval(`this._main[_x] = ${_x}`);
-      } catch (err) {
-        console.warn("the global variabel " + _x + " is not found ");
-      }
+      } catch (err) {}
       this.setReactivity(this._main, _x);
     }
     return this._main;
   }
 }
 let $Reactive = (args, event) => {
-  contexts = {
-    ...contexts,
-    ...new $Reactivity(args, event).init()
-  };
+  return (new $Reactivity(args, event).init());
 };
 
 let components_main = [{
   name: "seleku-main",
   element: [{
     tagName: "div",
-    id: "443a61d8",
+    id: "27ae84d6",
     parentId: 0,
     attr: "class=\"card\" ",
   }, {
     parentElement: "div",
     tagName: "b",
-    id: "0a2827e9",
-    parentId: "443a61d8",
+    id: "6ab4f8b4",
+    parentId: "27ae84d6",
     attr: "",
   }, {
     parentElement: "b",
-    id: "3fa4a69e",
+    id: "667429c7",
     text: "Hallo ",
-    parentId: "0a2827e9",
+    parentId: "6ab4f8b4",
   }, {
     parentElement: "b",
     tagName: "p",
-    id: "6c7c6b9f",
-    parentId: "0a2827e9",
-    attr: "",
+    id: "a96d7966",
+    parentId: "6ab4f8b4",
+    attr: "id={$angka}",
   }, {
     parentElement: "p",
-    id: "4fe31ceb",
+    id: "c1900c32",
     text: " {namaku} ",
-    parentId: "6c7c6b9f",
+    parentId: "a96d7966",
   }, {
     parentElement: "div",
     tagName: "div",
-    id: "a9c7d68b",
-    parentId: "443a61d8",
-    attr: "class=\"card-input\" ",
+    id: "fd537a92",
+    parentId: "27ae84d6",
+    attr: "name={namaku} class=\"card-input\" ",
   }, {
     parentElement: "div",
     tagName: "input",
-    id: "1677584b",
-    parentId: "a9c7d68b",
-    attr: "type=\"text\" this:bind={namaku} name=\"\" ",
+    id: "1c63382d",
+    parentId: "fd537a92",
+    attr: "type=\"text\" name=\"\" oninput=\"input(this)\" ",
   }, {
-    id: "63170182",
+    id: "89db4fde",
     text: " #html",
     parentId: 0,
   }, ],
   css: ` .card{ width: 300px; height: 200px; background: white; box-shadow: 0px 2px 20px rgba(0,0,0,0.1); border-radius: 10px; position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: auto; display: flex; justify-content: center; align-items: center; flex-direction: column; } .card b{ width: 80%; font-size: 15px; padding: 10px; box-sizing: border-box; font-family: sans-serif; text-transform: uppercase; } .card b p{ font-weight: 500; font-size: 12px; text-transform: lowercase; color: rgba(20,20,20.0.25); } .card .card-input{ width: 100%; padding: 20px 0px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; } .card .card-input input{ width: 80%; outline: none; background: rgb(250,250,255); border-radius: 10px; border: none; padding: 10px 20px; font-size: 12px; box-sizing: border-box; font-family: sans-serif; } `
 }];
 
+let head_elements_main = [{
+  parentElement: "head",
+  tagName: "meta",
+  id: "d958ec09",
+  parentId: 0,
+  attr: "charset=\"utf-8\"",
+}, {
+  parentElement: "head",
+  tagName: "title",
+  id: "127da223",
+  parentId: 0,
+  attr: "",
+}, {
+  parentElement: "title",
+  id: "3f5f01ce",
+  text: "\nHello Daber\n",
+  parentId: "127da223",
+}, ];
 class SelekuComponents extends HTMLElement {
   constructor(args) {
     super();
@@ -127,8 +140,8 @@ class SelekuComponents extends HTMLElement {
         match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*\=".*?\"/igm) || []];
       if (attr.match(/\w*\='.*?\'/igm))
         match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*\='.*?\'/igm) || []];
-      if (attr.match(/\w*\={.*?\}/igm) && !((attr.match(/\w*:*\w*\={.*?\}/igm))))
-        match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*\={.*?\}/igm) || []];
+      if (attr.replace(/\s+/, "").trim().match(/\w*\={.*?\}/igm) && !((attr.match(/\w*:*\w*\={.*?\}/igm))))
+        match_of_html = [...match_of_html, match_of_html, ...attr.replace(/\s+/, "").trim().match(/\w*\={.*?\}/igm) || []];
       if (attr.match(/\w*:*\w*\={.*?\}/igm))
         match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*:*\w*\={.*?\}/igm) || []];
       let attribute_object = [];
@@ -152,8 +165,10 @@ class SelekuComponents extends HTMLElement {
         }
       });
       attribute_object.forEach(tokens => {
-        element.setAttribute(tokens.name, tokens.value);
+        element.setAttribute(tokens.name, tokens.value.trim());
+        // c(tokens.name,tokens.value.trim())
       });
+      // c(attribute_object);
       return element;
     };
     let seleku_element = () => {
@@ -240,6 +255,98 @@ let Render = (args, parent) => {
       document.body.appendChild(a);
     });
 };
+let RenderCustomElementToHead = (elements) => {
+  let setattr = (element, attr) => {
+    let match_of_html = [];
+    if (attr.match(/\w*\=".*?\"/igm))
+      match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*\=".*?\"/igm) || []];
+    if (attr.match(/\w*\='.*?\'/igm))
+      match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*\='.*?\'/igm) || []];
+    if (attr.replace(/\s+/, "").trim().match(/\w*\={.*?\}/igm) && !((attr.match(/\w*:*\w*\={.*?\}/igm))))
+      match_of_html = [...match_of_html, match_of_html, ...attr.replace(/\s+/, "").trim().match(/\w*\={.*?\}/igm) || []];
+    if (attr.match(/\w*:*\w*\={.*?\}/igm))
+      match_of_html = [...match_of_html, match_of_html, ...attr.match(/\w*:*\w*\={.*?\}/igm) || []];
+    let attribute_object = [];
+    match_of_html.forEach((e, _index) => {
+      if (e instanceof Array) {
+        match_of_html[_index] = "";
+      } else {
+        let attribute = e?.replace?.("=", "~@")?.split("~@");
+        for (let x = 0; x < attribute?.length - 1; x++) {
+          attribute_object.push({
+            name: attribute[x],
+            value: (e => {
+              try {
+                return eval(attribute[x + 1]);
+              } catch (err) {
+                return attribute[x + 1];
+              }
+            })()
+          });
+        }
+      }
+    });
+    attribute_object.forEach(tokens => {
+      element.setAttribute(tokens.name, tokens.value.trim());
+      // c(tokens.name,tokens.value.trim())
+    });
+    // c(attribute_object);
+    return element;
+  };
+  let html = [];
+  let seleku_element = () => {
+    try {
+      elements.forEach((el) => {
+        if (el?.tagName && el?.id)
+          html.push({
+            element: (el?.attr?.trim().length > 0) ? setattr(document.createElement(el.tagName), el?.attr) : document.createElement(el.tagName),
+            id: el.id,
+            parentId: el?.parentId
+          });
+        if (el?.text && el?.parentId) {
+          html.push({
+            text: el?.text,
+            id: el.id,
+            parentId: el?.parentId
+          });
+        }
+      });
+    } catch (err) {}
+  };
+  let html_result = () => {
+    seleku_element();
+    let id_of_parent = [];
+    html.forEach(_el => (_el?.id && _el?.element) ? id_of_parent.push({
+      obj_id: _el.id,
+      obj: _el.element
+    }) : "");
+    html.forEach((_el, index) => {
+      id_of_parent.forEach(el => {
+        if (el?.obj_id === _el?.parentId && _el?.element)
+          el?.obj.appendChild(_el?.element);
+        else if (el?.obj_id === _el?.parentId && _el?.text) {
+          el.obj.textContent = _el?.text;
+          html[index] = "";
+        }
+      });
+    });
+    let components_child = [];
+    html.forEach((el) => {
+      if (el.parentId === null || el.parentId === 0) {
+        components_child.push(el.element);
+      }
+    });
+    return components_child;
+  };
+  html_result().forEach($el => {
+    if (document.head.querySelector("title") instanceof HTMLTitleElement && $el instanceof HTMLTitleElement) {
+      document.head.querySelector("title").textContent = $el.textContent;
+    }
+    if (!($el instanceof HTMLTitleElement)) {
+      document.head.appendChild($el);
+    }
+  });
+};
 
 class SelekuComponents_components_main extends SelekuComponents {
   constructor() {
@@ -250,126 +357,16 @@ class SelekuComponents_components_main extends SelekuComponents {
 registeryComponents(components_main, SelekuComponents_components_main);
 Render(components_main, document.querySelector("#app"));
 
+RenderCustomElementToHead(head_elements_main);
+
 let Joss_utility_class = [];
 let oneProps = {
-  "dbs-": {
-    "box-shadow": {
-      value: "0px 2px 5px rgba(0,0,0,$)",
-      type: ""
-    }
-  },
   "c-": {
     "color": {
       value: null,
       type: ""
     }
-  },
-  "ffs-": {
-    "font-family": "sans-serif"
-  },
-  "bottom-": {
-    "bottom": {
-      value: null,
-      type: ""
-    }
-  },
-  "top-": {
-    "top": {
-      value: null,
-      type: ""
-    }
-  },
-  "left-": {
-    "left": {
-      value: null,
-      type: ""
-    }
-  },
-  "right-": {
-    "right": {
-      value: null,
-      type: ""
-    }
-  },
-  "cur-": {
-    "cursor": {
-      value: null,
-      type: ""
-    }
-  },
-  "br-": {
-    "border": {
-      value: null,
-      type: ""
-    }
-  },
-  "pos-": {
-    "position": {
-      value: null,
-      type: ""
-    }
-  },
-  "pad-": {
-    "padding": {
-      value: null,
-      type: ""
-    }
-  },
-  "m-": {
-    "margin": {
-      value: null,
-      type: ""
-    }
-  },
-  "t-": {
-    "top": {
-      value: null,
-      type: ""
-    }
-  },
-  "bg-": {
-    "background": {
-      value: null,
-      type: ""
-    }
-  },
-  "d-": {
-    "display": {
-      value: null,
-      type: ""
-    }
-  },
-  "w-": {
-    "width": {
-      value: null,
-      type: ""
-    }
-  },
-  "h-": {
-    "height": {
-      value: null,
-      type: ""
-    }
-  },
-  "o-": {
-    "opacity": {
-      value: null,
-      type: ""
-    }
-  },
-  "f-": {
-    "filter": {
-      value: null,
-      type: ""
-    }
-  },
-
-  "t-": {
-    "transform": {
-      value: null,
-      type: ""
-    }
-  },
+  }
 }
 
 let twoProps = {
@@ -379,99 +376,15 @@ let twoProps = {
       type: ""
     },
   },
-  "br-r-": {
-    "border-radius": {
-      value: null,
-      type: ""
-    },
-  },
-  "p-b-": {
-    "padding-bottom": {
-      value: null,
-      type: ""
-    },
-  },
-  "f-s-": {
-    "font-size": {
-      value: null,
-      type: ""
-    }
-  },
-  "bg-c-": {
-    "background-color": {
-      value: null,
-      type: ""
-    }
-  },
   "bg-i-": {
     "background-image": {
       value: 'url("$")',
       type: ""
     }
   },
-  "o-l-": {
-    "outline": {
-      value: null,
-      type: ""
-    }
-  },
-  "t-t-": {
-    "text-transform": {
-      value: null,
-      type: ""
-    }
-  },
-  "f-w-": {
-    "font-weight": {
-      value: null,
-      type: ""
-    }
-  },
-  "f-f-": {
-    "font-family": {
-      value: null,
-      type: ""
-    }
-  },
-  "l-s-": {
-    "letter-spacing": {
-      value: null,
-      type: ""
-    }
-  },
-  "b-s-": {
-    "box-shadow": {
-      value: null,
-      type: ""
-    }
-  },
   "bg-g-": {
     "background": {
       value: "linear-gradient(to bottom, $)",
-      type: ""
-    }
-  },
-  "j-c-": {
-    "justify-content": {
-      value: null,
-      type: ""
-    }
-  },
-  "flex-d-": {
-    "flex-direction": {
-      value: null,
-      type: ""
-    }
-  },
-  "flex-w-": {
-    "flex-wrap": {
-      value: null,
-      type: ""
-    }
-  },
-  "align-i-": {
-    "align-items": {
-      value: null,
       type: ""
     }
   }
@@ -694,6 +607,43 @@ class joss_overload {
     }
   }
 }
+class DynamicAttribute {
+  constructor(args) {
+    if (args)
+      this._elements = args;
+    else
+      this._elements = document?.body;
+  }
+  getAttribute($args, other, name) {
+    try {
+      let attr = {
+        ...$args.attributes
+      };
+      for (let x in attr) {
+        if (name === attr[x].name && typeof eval(other) === "string" || typeof eval(other) === "number") {
+          $args.setAttribute(attr[x].name, eval(other));
+        }
+        if (attr[x].value == eval(other) && typeof eval(other) === "string" || typeof eval(other) === "number") {
+          $args.setAttribute(attr[x].name, eval(other));
+        }
+        if (/\{.*?\}/igm.test(attr[x].value) && !(/\w*:/igm.test(attr[x].name)) || attr[x].value == eval(other)) {
+          let _$element = attr[x].value.replace("{", "").replace("}", "");
+          if (typeof eval(_$element) === "string" || typeof eval(_$element) === "number") {
+            $args.setAttribute(attr[x].name, eval(_$element));
+          };
+          break;
+        }
+      }
+    } catch (err) {}
+  }
+  createDynamic() {
+    this.getAttribute = this.getAttribute;
+    let element = [...this._elements.children];
+    element.forEach($child => {
+      this.getAttribute($child);
+    });
+  }
+}
 let JOSS = joss_overload;
 let body = document.body;
 let child;
@@ -701,8 +651,10 @@ let allElement = [];
 let allElementAttribute = [];
 let allElements = [];
 let {
-  ["log"]: _c, ["error"]: _e
+  ["log"]: _$c, ["error"]: _$e
 } = console;
+window._$all_attribute = [];
+
 let Name;
 
 let selekDOM = (element) => {
@@ -710,9 +662,33 @@ let selekDOM = (element) => {
   if (body.children.length !== 0 && !element) {
 
     child = body.children;
+    for (let _$x of child) {
+      let attr = {
+        ..._$x.attributes
+      };
+      for (let __$x in attr) {
+        _$all_attribute.push({
+          name: attr[__$x].name,
+          value: attr[__$x].value,
+          element: attr[__$x].ownerElement
+        });
+      }
+    }
 
   } else {
     child = element.children;
+    for (let _$x of child) {
+      let attr = {
+        ..._$x.attributes
+      };
+      for (let __$x in attr) {
+        _$all_attribute.push({
+          name: attr[__$x].name,
+          value: attr[__$x].value,
+          element: attr[__$x].ownerElement
+        });
+      }
+    }
   }
 
 
@@ -730,7 +706,6 @@ let selekDOM = (element) => {
         if (attrOfElement === void 0) {
           attrOfElement = attr.getAttribute("class").split(" ");
         }
-
 
         for (let attrOfElementStyle of attrOfElement) {
           if (attrOfElementStyle.split(/-/igm).length === 3) {
@@ -753,7 +728,7 @@ let selekDOM = (element) => {
     for (let el of child) {
 
       if (el.toString() === document.createElement("script").toString()) {
-        //do something
+        //do something 
       } else {
         let content = el.innerHTML;
         let theMain = content.replace(/{/igm, " {").replace(/}/igm, "} ").split(" ");
@@ -792,17 +767,22 @@ let selekDOM = (element) => {
             context.forEach((cont) => {
               allElement.push({
                 element: el,
+                attr: el.attributes,
                 bindTo: cont.replace(/{/igm, "").replace(/}/igm, "")
               });
               try {
-                eval(cont.replace(/{/igm, "").replace(/}/igm, ""));
-
-                el.innerHTML = el.innerHTML.replace(cont, eval(cont.replace(/{/igm, "").replace(/}/igm, "")));
+                let _$js_to_html_value = eval(cont.replace(/{/igm, "").replace(/}/igm, ""));
+                if (_$js_to_html_value instanceof HTMLElement) {
+                  el.textContent = el.textContent.replace(/{.*?}/igm, "");
+                  el.appendChild(_$js_to_html_value);
+                } else {
+                  el.innerHTML = el.innerHTML.replace(cont, eval(cont.replace(/{/igm, "").replace(/}/igm, "")));
+                }
 
               } catch (err) {
                 if (err) {
-                  _e(`the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define`);
-                  el.innerHTML = el.innerHTML.replace(cont, `<b class="danger"> ${cont.replace(/{/igm,"").replace(/}/igm,"")} </b>`)
+                  _$e(`the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define`);
+                  el.innerHTML = el.innerHTML.replace(cont, `<b class="danger">error the ${cont.replace(/{/igm,"").replace(/}/igm,"")} is not define at ${parentElement.innerHTML}</b>`)
                 }
               }
             });
@@ -825,18 +805,16 @@ let selekDOM = (element) => {
 
 let reactive = () => {
 
-  window.contexts = {
-    main: "main"
-  };
+  window.contexts = {};
 
   try {
 
-    allElementAttribute.forEach((_i) => {
-      if (_i.attr) {
-        contexts[_i.attr] = eval(_i.attr);
+    allElementAttribute.forEach((_$i) => {
+      if (_$i.attr) {
+        contexts[_$i.attr] = eval(_$i.attr);
       }
-      if (_i.bindTo) {
-        contexts[_i.bindTo] = eval(_i.bindTo);
+      if (_$i.bindTo) {
+        contexts[_$i.bindTo] = eval(_$i.bindTo);
       }
     });
 
@@ -858,94 +836,44 @@ let reactive = () => {
       for (let obj in object) {
         if (object.hasOwnProperty(obj)) {
           reactivity(object, obj);
+
         }
       }
     }
 
     function notify(name) {
 
-      allElements.forEach((_i) => {
+      allElements.forEach((_$i) => {
         try {
-          if (_i.value === "" || _i.value !== "" && typeof _i.value === "string") {
-            _i.value = eval(_i.getAttribute("this:bind").replace(/{/igm, "").replace(/}/igm, "")).toString();
-            _i.oninput = () => {
-              allElementAttribute.forEach((_j) => {
-                name = _i.getAttribute("this:bind").replace(/{/igm, "").replace(/}/igm, "");
-                if (name == _j.bindTo) {
-                  contexts[name] = `${_i.value}`;
-                  eval(`${name} = "${_i.value}"`);
-                  _j.element.innerHTML = eval(name);
-                }
+          allElementAttribute.forEach((j) => {
 
-              });
+            if (name == j.bindTo) {
+              eval(`${name} = ${contexts[name]}`);
+              if (typeof eval(name) === "string" || typeof eval(name) === "number") {
+                j.element.textContent = eval(name);
+              } else {
+                j.element.textContent = contexts[name];
+              }
+            } else {
+              eval(`${name} = ${contexts[name]}`);
             }
 
-          } else {
-            allElementAttribute.forEach((_j) => {
-              try {
-                if (name == _j.bindTo) {
-                  eval(`${name} = ${contexts[name]}`);
-                  _j.element.innerHTML = eval(name);
-                }
-              } catch (err) {
-                eval(`${name} = ${contexts[name]}`);
-                _j.element.innerHTML = eval(name);
-              }
-
-            });
-          }
+          });
 
         } catch (err) {
-          allElementAttribute.forEach((_j) => {
-            if (name === _j.attr) {
-              let g = {
-                ..._j.element.attributes
-              };
-
-              if (Name === undefined) {
-                for (let x in g) {
-                  if (g[x].value.match(/\{(.*?)\}/)) {
-
-                    try {
-                      if (g[x].name === "this:bind") {
-                        return;
-                      }
-                      eval(`${name} = "${contexts[name]}"`);
-                      _j.element.setAttribute(g[x].name, contexts[name]);
-                      Name = g[x].name;
-                    } catch (error) {
-                      e(error)
-
-                    }
+          allElementAttribute.forEach((j) => {
 
 
-                  }
-
-                }
-              } else {
-
-                try {
-                  eval(`${name} = "${contexts[name]}"`);
-                  _j.element.setAttribute(Name, contexts[name]);
-
-                } catch (error) {
-                  e(error)
-                }
-              }
-            }
-
-            if (name == _j.bindTo) {
+            if (name == j.bindTo) {
 
               try {
-                try {
-                  eval(`${name} = ${contexts[name]}`);
-                } catch (err) {
-                  eval(`${name} = "${contexts[name]}"`);
-                };
+                eval(`${name} = ${contexts[name]}`);
 
-                _j.element.innerHTML = contexts[name];
+                j.element.textContent = contexts[name];
 
               } catch (err) {
+                eval(`${name} = \`${contexts[name]}\``);
+                j.element.textContent = contexts[name];
                 return;
 
               }
@@ -955,11 +883,18 @@ let reactive = () => {
           });
         }
       });
+      new DynamicAttribute().createDynamic();
+      _$all_attribute.forEach((j) => {
+        if (/\{/igm.test(j.value) && /\{/igm.test(j.value)) {
+          let nameofattr = j.value.trim().replace(/\{/igm, "").replace(/\}/igm, "");
+          new DynamicAttribute().getAttribute(j.element, nameofattr, j.name);
+        }
+        return;
+      });
 
     }
 
     setReactivity(contexts);
-    contexts.main = contexts.main;
 
 
   } catch (err) {
@@ -975,6 +910,7 @@ const binding = () => {
           if (element.attr[x].value.match(/\{(.*?)\}/)) {
             allElementAttribute.push({
               element: element.element,
+              bindTo: element.bindTo,
               attr: element.attr[x].value.replace(/{/igm, "").replace(/}/igm, "")
             });
           }
@@ -984,17 +920,22 @@ const binding = () => {
     } else {
       allElementAttribute.push({
         element: element.element,
-        bindTo: element.bindTo
+        bindTo: element.bindTo,
       });
     }
 
   });
+
+
 }
 
 window.onload = () => {
   selekDOM();
   binding();
   reactive();
+  for (let x in contexts) {
+    contexts[x] = contexts[x];
+  }
   new JOSS({
     class: "",
     element: ""

@@ -1,123 +1,11 @@
 let Joss_utility_class = [];
 let oneProps = {
-    "dbs-":{
-        "box-shadow": {
-            value: "0px 2px 5px rgba(0,0,0,$)",
-            type: ""
-        }
-    },
     "c-": {
         "color": {
             value: null,
             type: ""
         }
-    },
-    "ffs-": {
-        "font-family": "sans-serif"
-    },
-    "bottom-": {
-        "bottom": {
-            value: null,
-            type: ""
-        }
-    },
-    "top-": {
-        "top": {
-            value: null,
-            type: ""
-        }
-    },
-    "left-": {
-        "left": {
-            value: null,
-            type: ""
-        }
-    },
-    "right-": {
-        "right": {
-            value: null,
-            type: ""
-        }
-    },
-    "cur-": {
-        "cursor": {
-            value: null,
-            type: ""
-        }
-    },
-    "br-": {
-        "border": {
-            value: null,
-            type: ""
-        }
-    },
-    "pos-": {
-        "position": {
-            value: null,
-            type: ""
-        }
-    },
-    "pad-": {
-        "padding": {
-            value: null,
-            type: ""
-        }
-    },
-    "m-": {
-        "margin": {
-            value: null,
-            type: ""
-        }
-    },
-    "t-": {
-        "top": {
-            value: null,
-            type: ""
-        }
-    },
-    "bg-": {
-        "background": {
-            value: null,
-            type: ""
-        }
-    },
-    "d-": {
-        "display": {
-            value: null,
-            type: ""
-        }
-    },
-    "w-": {
-        "width": {
-            value: null,
-            type: ""
-        }
-    },
-    "h-": {
-        "height": {
-            value: null,
-            type: ""
-        }
-    },
-    "o-": {
-        "opacity": {
-            value: null,
-            type: ""
-        }
-    },
-    "f-": {
-        "filter": {
-            value: null,
-            type: ""
-        }
-    },
-
-    "t-": {
-        "transform": {
-            value: null,
-            type: ""
-        }
-    },
+    }
 }
 
 let twoProps = {
@@ -127,99 +15,15 @@ let twoProps = {
             type: ""
         },
     },
-    "br-r-": {
-        "border-radius": {
-            value: null,
-            type: ""
-        },
-    },
-    "p-b-": {
-        "padding-bottom": {
-            value: null,
-            type: ""
-        },
-    },
-    "f-s-": {
-        "font-size": {
-            value: null,
-            type: ""
-        }
-    },
-    "bg-c-": {
-        "background-color": {
-            value: null,
-            type: ""
-        }
-    },
     "bg-i-": {
         "background-image": {
             value: 'url("$")',
             type: ""
         }
     },
-    "o-l-": {
-        "outline": {
-            value: null,
-            type: ""
-        }
-    },
-    "t-t-": {
-        "text-transform": {
-            value: null,
-            type: ""
-        }
-    },
-    "f-w-": {
-        "font-weight": {
-            value: null,
-            type: ""
-        }
-    },
-    "f-f-": {
-        "font-family": {
-            value: null,
-            type: ""
-        }
-    },
-    "l-s-": {
-        "letter-spacing": {
-            value: null,
-            type: ""
-        }
-    },
-    "b-s-": {
-        "box-shadow": {
-            value: null,
-            type: ""
-        }
-    },
     "bg-g-": {
         "background": {
             value: "linear-gradient(to bottom, $)",
-            type: ""
-        }
-    },
-    "j-c-": {
-        "justify-content": {
-            value: null,
-            type: ""
-        }
-    },
-    "flex-d-": {
-        "flex-direction": {
-            value: null,
-            type: ""
-        }
-    },
-    "flex-w-": {
-        "flex-wrap": {
-            value: null,
-            type: ""
-        }
-    },
-    "align-i-": {
-        "align-items": {
-            value: null,
             type: ""
         }
     }

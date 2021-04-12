@@ -9,7 +9,7 @@ class $Reactivity {
                 eval(`${_x} = ${_main[_x]}`);
             }
             catch (err) {
-                console.warn("can't to set from object reactive to global");
+                eval(`${_x} = "${_main[_x]}"`);
             }
         }
     }
@@ -39,7 +39,6 @@ class $Reactivity {
                 eval(`this._main[_x] = ${_x}`);
             }
             catch (err) {
-                console.warn("the global variabel " + _x + " is not found ");
             }
             this.setReactivity(this._main, _x);
         }
@@ -47,5 +46,5 @@ class $Reactivity {
     }
 }
 let $Reactive = (args, event) => {
-    contexts = { ...contexts, ...new $Reactivity(args, event).init() };
+    return (new $Reactivity(args, event).init());
 };

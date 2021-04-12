@@ -23,6 +23,7 @@ module.exports.compile = async (args) => {
     let Html = [];
     let Css = [];
     let Js = [];
+    let Head = [];
     // ============================================================
     // =========================================================
     // fungsi di bawah merupakan fungsi yang berperan dalam meregister
@@ -42,6 +43,9 @@ module.exports.compile = async (args) => {
         if (/\#*\js/igm.test(tokens_of_seleku)) {
             Js = [tokens_of_seleku];
         }
+        if (/\#*\head/igm.test(tokens_of_seleku)) {
+            Head = [tokens_of_seleku];
+        }
     });
     // ============================================================
     const lexer_result = Html.join("").split("\n").map(element => whitespaceLexer(element));
@@ -54,9 +58,6 @@ module.exports.compile = async (args) => {
                 final_data_to_ast.push({ el: lexer.element, col: lexer.col, pos: position, token: lexer.token, type: lexer.is });
             }
             else if (lexer.type === typeOfElement[1]) {
-                // =========== before ==========
-                // final_data_to_ast.push({el: lexer.element,col: lexer.col, pos: position,token: lexer.token,type: lexer.is});
-                // =========== after ============
                 position++;
                 final_data_to_ast.push({ el: lexer.element, col: lexer.col, pos: position, token: lexer.token, type: lexer.is });
             }
@@ -65,7 +66,7 @@ module.exports.compile = async (args) => {
             }
         });
         final_data_to_ast[-1] = { el: [], col: -1, pos: -1, token: "", type: "nothing" };
-        AST(final_data_to_ast, lexer_result, Css, Js, args);
+        AST(final_data_to_ast, lexer_result, Css, Js, Head, args);
         // c(tokens);
     };
     g();

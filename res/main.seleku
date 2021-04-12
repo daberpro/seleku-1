@@ -1,22 +1,23 @@
 @import "card.seleku"
 
 #head#
-	<title>Seleku Apps</title>
+	<meta charset="utf-8"/>
+	<title>Hello Daber</title>
 #head#
 
 <script type="text/javascript">
 
 	let _nama = "Ari Susanto";
-
+	
 </script>
 
 <html>
 	<div class="card">
 		<b>Hallo
-			<p>{namaku}</p>
+			<p id={$angka}>{namaku}</p>
 		</b>
-		<div class="card-input">
-			<input type="text" this:bind={namaku} name="">
+		<div name={namaku} class="card-input">
+			<input type="text"  name="" oninput="input(this)">
 		</div>
 	</div>
 </html>
@@ -76,3 +77,5 @@
 		font-family: sans-serif;
 	}
 </style>
+
+

@@ -8063,950 +8063,6 @@ var require_dist = __commonJS((exports2) => {
   }});
 });
 
-// ../node_modules/indexof/index.js
-var require_indexof = __commonJS((exports2, module2) => {
-  var indexOf = [].indexOf;
-  module2.exports = function(arr, obj) {
-    if (indexOf)
-      return arr.indexOf(obj);
-    for (var i = 0; i < arr.length; ++i) {
-      if (arr[i] === obj)
-        return i;
-    }
-    return -1;
-  };
-});
-
-// ../node_modules/class-list/index.js
-var require_class_list = __commonJS((exports2, module2) => {
-  var indexof = require_indexof();
-  module2.exports = ClassList;
-  function ClassList(elem) {
-    var cl = elem.classList;
-    if (cl) {
-      return cl;
-    }
-    var classList = {
-      add,
-      remove,
-      contains,
-      toggle,
-      toString: $toString,
-      length: 0,
-      item
-    };
-    return classList;
-    function add(token) {
-      var list = getTokens();
-      if (indexof(list, token) > -1) {
-        return;
-      }
-      list.push(token);
-      setTokens(list);
-    }
-    function remove(token) {
-      var list = getTokens(), index = indexof(list, token);
-      if (index === -1) {
-        return;
-      }
-      list.splice(index, 1);
-      setTokens(list);
-    }
-    function contains(token) {
-      return indexof(getTokens(), token) > -1;
-    }
-    function toggle(token) {
-      if (contains(token)) {
-        remove(token);
-        return false;
-      } else {
-        add(token);
-        return true;
-      }
-    }
-    function $toString() {
-      return elem.className;
-    }
-    function item(index) {
-      var tokens = getTokens();
-      return tokens[index] || null;
-    }
-    function getTokens() {
-      var className = elem.className;
-      return filter(className.split(" "), isTruthy);
-    }
-    function setTokens(list) {
-      var length = list.length;
-      elem.className = list.join(" ");
-      classList.length = length;
-      for (var i = 0; i < list.length; i++) {
-        classList[i] = list[i];
-      }
-      delete list[length];
-    }
-  }
-  function filter(arr, fn) {
-    var ret = [];
-    for (var i = 0; i < arr.length; i++) {
-      if (fn(arr[i]))
-        ret.push(arr[i]);
-    }
-    return ret;
-  }
-  function isTruthy(value) {
-    return !!value;
-  }
-});
-
-// ../node_modules/html-element/html-attributes.js
-var require_html_attributes = __commonJS((exports2, module2) => {
-  var PROPS_TO_ATTRS = {
-    className: "class",
-    htmlFor: "for"
-  };
-  var HTML_ATTRIBUTES = {
-    accept: new Set([
-      "form",
-      "input"
-    ]),
-    "accept-charset": new Set([
-      "form"
-    ]),
-    accesskey: "GLOBAL",
-    action: new Set([
-      "form"
-    ]),
-    align: new Set([
-      "applet",
-      "caption",
-      "col",
-      "colgroup",
-      "hr",
-      "iframe",
-      "img",
-      "table",
-      "tbody",
-      "td",
-      "tfoot",
-      "th",
-      "thead",
-      "tr"
-    ]),
-    alt: new Set([
-      "applet",
-      "area",
-      "img",
-      "input"
-    ]),
-    async: new Set([
-      "script"
-    ]),
-    autocomplete: new Set([
-      "form",
-      "input"
-    ]),
-    autofocus: new Set([
-      "button",
-      "input",
-      "keygen",
-      "select",
-      "textarea"
-    ]),
-    autoplay: new Set([
-      "audio",
-      "video"
-    ]),
-    autosave: new Set([
-      "input"
-    ]),
-    bgcolor: new Set([
-      "body",
-      "col",
-      "colgroup",
-      "marquee",
-      "table",
-      "tbody",
-      "tfoot",
-      "td",
-      "th",
-      "tr"
-    ]),
-    border: new Set([
-      "img",
-      "object",
-      "table"
-    ]),
-    buffered: new Set([
-      "audio",
-      "video"
-    ]),
-    challenge: new Set([
-      "keygen"
-    ]),
-    charset: new Set([
-      "meta",
-      "script"
-    ]),
-    checked: new Set([
-      "command",
-      "input"
-    ]),
-    cite: new Set([
-      "blockquote",
-      "del",
-      "ins",
-      "q"
-    ]),
-    class: "GLOBAL",
-    code: new Set([
-      "applet"
-    ]),
-    codebase: new Set([
-      "applet"
-    ]),
-    color: new Set([
-      "basefont",
-      "font",
-      "hr"
-    ]),
-    cols: new Set([
-      "textarea"
-    ]),
-    colspan: new Set([
-      "td",
-      "th"
-    ]),
-    content: new Set([
-      "meta"
-    ]),
-    contenteditable: "GLOBAL",
-    contextmenu: "GLOBAL",
-    controls: new Set([
-      "audio",
-      "video"
-    ]),
-    coords: new Set([
-      "area"
-    ]),
-    data: new Set([
-      "object"
-    ]),
-    datetime: new Set([
-      "del",
-      "ins",
-      "time"
-    ]),
-    default: new Set([
-      "track"
-    ]),
-    defer: new Set([
-      "script"
-    ]),
-    dir: "GLOBAL",
-    dirname: new Set([
-      "input",
-      "textarea"
-    ]),
-    disabled: new Set([
-      "button",
-      "command",
-      "fieldset",
-      "input",
-      "keygen",
-      "optgroup",
-      "option",
-      "select",
-      "textarea"
-    ]),
-    download: new Set([
-      "a",
-      "area"
-    ]),
-    draggable: "GLOBAL",
-    dropzone: "GLOBAL",
-    enctype: new Set([
-      "form"
-    ]),
-    for: new Set([
-      "label",
-      "output"
-    ]),
-    form: new Set([
-      "button",
-      "fieldset",
-      "input",
-      "keygen",
-      "label",
-      "meter",
-      "object",
-      "output",
-      "progress",
-      "select",
-      "textarea"
-    ]),
-    formaction: new Set([
-      "input",
-      "button"
-    ]),
-    headers: new Set([
-      "td",
-      "th"
-    ]),
-    height: new Set([
-      "canvas",
-      "embed",
-      "iframe",
-      "img",
-      "input",
-      "object",
-      "video"
-    ]),
-    hidden: "GLOBAL",
-    high: new Set([
-      "meter"
-    ]),
-    href: new Set([
-      "a",
-      "area",
-      "base",
-      "link"
-    ]),
-    hreflang: new Set([
-      "a",
-      "area",
-      "link"
-    ]),
-    "http-equiv": new Set([
-      "meta"
-    ]),
-    icon: new Set([
-      "command"
-    ]),
-    id: "GLOBAL",
-    ismap: new Set([
-      "img"
-    ]),
-    itemprop: "GLOBAL",
-    keytype: new Set([
-      "keygen"
-    ]),
-    kind: new Set([
-      "track"
-    ]),
-    label: new Set([
-      "track"
-    ]),
-    lang: "GLOBAL",
-    language: new Set([
-      "script"
-    ]),
-    list: new Set([
-      "input"
-    ]),
-    loop: new Set([
-      "audio",
-      "bgsound",
-      "marquee",
-      "video"
-    ]),
-    low: new Set([
-      "meter"
-    ]),
-    manifest: new Set([
-      "html"
-    ]),
-    max: new Set([
-      "input",
-      "meter",
-      "progress"
-    ]),
-    maxlength: new Set([
-      "input",
-      "textarea"
-    ]),
-    maxlength: new Set([
-      "input",
-      "textarea"
-    ]),
-    media: new Set([
-      "a",
-      "area",
-      "link",
-      "source",
-      "style"
-    ]),
-    method: new Set([
-      "form"
-    ]),
-    min: new Set([
-      "input",
-      "meter"
-    ]),
-    multiple: new Set([
-      "input",
-      "select"
-    ]),
-    muted: new Set([
-      "video"
-    ]),
-    name: new Set([
-      "button",
-      "form",
-      "fieldset",
-      "iframe",
-      "input",
-      "keygen",
-      "object",
-      "output",
-      "select",
-      "textarea",
-      "map",
-      "meta",
-      "param"
-    ]),
-    novalidate: new Set([
-      "form"
-    ]),
-    open: new Set([
-      "details"
-    ]),
-    optimum: new Set([
-      "meter"
-    ]),
-    pattern: new Set([
-      "input"
-    ]),
-    ping: new Set([
-      "a",
-      "area"
-    ]),
-    placeholder: new Set([
-      "input",
-      "textarea"
-    ]),
-    poster: new Set([
-      "video"
-    ]),
-    preload: new Set([
-      "audio",
-      "video"
-    ]),
-    radiogroup: new Set([
-      "command"
-    ]),
-    readonly: new Set([
-      "input",
-      "textarea"
-    ]),
-    rel: new Set([
-      "a",
-      "area",
-      "link"
-    ]),
-    required: new Set([
-      "input",
-      "select",
-      "textarea"
-    ]),
-    reversed: new Set([
-      "ol"
-    ]),
-    rows: new Set([
-      "textarea"
-    ]),
-    rowspan: new Set([
-      "td",
-      "th"
-    ]),
-    sandbox: new Set([
-      "iframe"
-    ]),
-    scope: new Set([
-      "th"
-    ]),
-    scoped: new Set([
-      "style"
-    ]),
-    seamless: new Set([
-      "iframe"
-    ]),
-    selected: new Set([
-      "option"
-    ]),
-    shape: new Set([
-      "a",
-      "area"
-    ]),
-    size: new Set([
-      "input",
-      "select"
-    ]),
-    sizes: new Set([
-      "img",
-      "link",
-      "source"
-    ]),
-    span: new Set([
-      "col",
-      "colgroup"
-    ]),
-    spellcheck: "GLOBAL",
-    src: new Set([
-      "audio",
-      "embed",
-      "iframe",
-      "img",
-      "input",
-      "script",
-      "source",
-      "track",
-      "video"
-    ]),
-    srcdoc: new Set([
-      "iframe"
-    ]),
-    srclang: new Set([
-      "track"
-    ]),
-    srcset: new Set([
-      "img"
-    ]),
-    start: new Set([
-      "ol"
-    ]),
-    step: new Set([
-      "input"
-    ]),
-    style: "GLOBAL",
-    summary: new Set([
-      "table"
-    ]),
-    tabindex: "GLOBAL",
-    target: new Set([
-      "a",
-      "area",
-      "base",
-      "form"
-    ]),
-    title: "GLOBAL",
-    type: new Set([
-      "button",
-      "input",
-      "command",
-      "embed",
-      "object",
-      "script",
-      "source",
-      "style",
-      "menu"
-    ]),
-    usemap: new Set([
-      "img",
-      "input",
-      "object"
-    ]),
-    value: new Set([
-      "button",
-      "option",
-      "input",
-      "li",
-      "meter",
-      "progress",
-      "param"
-    ]),
-    width: new Set([
-      "canvas",
-      "embed",
-      "iframe",
-      "img",
-      "input",
-      "object",
-      "video"
-    ]),
-    wrap: new Set([
-      "textarea"
-    ])
-  };
-  function isStandardAttribute(attrName, tagName) {
-    tagName = tagName.toLowerCase();
-    var attr = HTML_ATTRIBUTES[attrName.toLowerCase()];
-    return !!attr && (attr === "GLOBAL" || attr.has(tagName));
-  }
-  function propToAttr(prop) {
-    return PROPS_TO_ATTRS[prop] || prop;
-  }
-  module2.exports = {
-    isStandardAttribute,
-    propToAttr
-  };
-});
-
-// ../node_modules/html-element/index.js
-var require_html_element = __commonJS((exports2, module2) => {
-  var ClassList = require_class_list();
-  var htmlAttributes = require_html_attributes();
-  function Event(type, data) {
-    this.type = type;
-    this.target = null;
-    Object.keys(data || {}).forEach(function(attr) {
-      this[attr] = data[attr];
-    }, this);
-  }
-  Event.prototype.preventDefault = function() {
-  };
-  Event.prototype.stopPropagation = function() {
-  };
-  Event.prototype.stopImmediatePropagation = function() {
-  };
-  function addEventListener(eventType, listener) {
-    this._eventListeners = this._eventListeners || {};
-    this._eventListeners[eventType] = this._eventListeners[eventType] || [];
-    var listeners = this._eventListeners[eventType];
-    if (listeners.indexOf(listener) === -1) {
-      listeners.push(listener);
-    }
-  }
-  function removeEventListener(eventType, listener) {
-    var listeners = this._eventListeners && this._eventListeners[eventType];
-    if (listeners) {
-      var index = listeners.indexOf(listener);
-      if (index !== -1) {
-        listeners.splice(index, 1);
-      }
-    }
-  }
-  function dispatchEvent(event) {
-    event.target = this;
-    var listeners = this._eventListeners && this._eventListeners[event.type];
-    if (listeners) {
-      listeners.forEach(function(listener) {
-        listener(event);
-      });
-    }
-    return true;
-  }
-  function Document() {
-  }
-  Document.prototype.createTextNode = function(v) {
-    var n = new Text();
-    n.textContent = v;
-    n.nodeName = "#text";
-    n.nodeType = 3;
-    return n;
-  };
-  Document.prototype.createElement = function(nodeName) {
-    var el = new Element();
-    el.nodeName = el.tagName = nodeName;
-    return el;
-  };
-  Document.prototype.createComment = function(data) {
-    var el = new Comment();
-    el.data = data;
-    return el;
-  };
-  Document.prototype.addEventListener = addEventListener;
-  Document.prototype.removeEventListener = removeEventListener;
-  Document.prototype.dispatchEvent = dispatchEvent;
-  function Node() {
-  }
-  Text.prototype = new Node();
-  Element.prototype = new Node();
-  Comment.prototype = new Node();
-  function Style(el) {
-    this.el = el;
-    this.styles = [];
-  }
-  Style.prototype.setProperty = function(n, v) {
-    this.el._setProperty(this.styles, {name: n, value: v});
-  };
-  Style.prototype.getProperty = function(n) {
-    return this.el._getProperty(this.styles, n);
-  };
-  Style.prototype.__defineGetter__("cssText", function() {
-    var stylified = "";
-    this.styles.forEach(function(s) {
-      stylified += s.name + ":" + s.value + ";";
-    });
-    return stylified;
-  });
-  Style.prototype.__defineSetter__("cssText", function(v) {
-    this.styles.length = 0;
-    v.split(";").forEach(function(part) {
-      var splitPoint = part.indexOf(":");
-      if (splitPoint) {
-        var key = part.slice(0, splitPoint).trim();
-        var value = part.slice(splitPoint + 1).trim();
-        this.setProperty(key, value);
-      }
-    }, this);
-  });
-  function Attribute(name, value) {
-    if (name) {
-      this.name = name;
-      this.value = value ? value : "";
-    }
-  }
-  function Element() {
-    var self = this;
-    this.style = new Style(this);
-    this.classList = ClassList(this);
-    this.childNodes = [];
-    this.attributes = [];
-    this.dataset = {};
-    this.className = "";
-    this._setProperty = function(arr, obj, key, val) {
-      var p = self._getProperty(arr, key);
-      if (p) {
-        p.value = String(val);
-        return;
-      }
-      arr.push(typeof obj === "function" ? new obj(key.toLowerCase(), String(val)) : obj);
-    };
-    this._getProperty = function(arr, key) {
-      if (!key)
-        return;
-      key = key.toLowerCase();
-      for (var i = 0; i < arr.length; i++) {
-        if (key === arr[i].name)
-          return arr[i];
-      }
-    };
-  }
-  Element.prototype.nodeType = 1;
-  Element.prototype.appendChild = function(child) {
-    child.parentElement = this;
-    this.childNodes.push(child);
-    return child;
-  };
-  Element.prototype.setAttribute = function(n, v) {
-    if (n === "style") {
-      this.style.cssText = v;
-    } else {
-      this._setProperty(this.attributes, Attribute, n, v);
-    }
-  };
-  Element.prototype.getAttribute = function(n) {
-    if (n === "style") {
-      return this.style.cssText;
-    } else {
-      var result = this._getProperty(this.attributes, n);
-      return typeof result !== "undefined" ? result.value : null;
-    }
-  };
-  Element.prototype.removeAttribute = function(n) {
-    if (n === "class") {
-      delete this.className;
-    } else {
-      for (var i = 0, len = this.attributes.length; i < len; i++) {
-        if (this.attributes[i].name === n) {
-          this.attributes.splice(i, 1);
-          break;
-        }
-      }
-    }
-  };
-  Element.prototype.replaceChild = function(newChild, oldChild) {
-    var self = this;
-    var replaced = false;
-    this.childNodes.forEach(function(child, index) {
-      if (child === oldChild) {
-        self.childNodes[index] = newChild;
-        newChild.parentElement = this;
-        replaced = true;
-      }
-    });
-    if (replaced)
-      return oldChild;
-  };
-  Element.prototype.removeChild = function(rChild) {
-    var self = this;
-    var removed = true;
-    this.childNodes.forEach(function(child, index) {
-      if (child === rChild) {
-        self.childNodes.splice(index, 1);
-        rChild.parentElement = null;
-        removed = true;
-      }
-    });
-    if (removed)
-      return rChild;
-  };
-  Element.prototype.insertBefore = function(newChild, existingChild) {
-    var childNodes = this.childNodes;
-    if (existingChild === null) {
-      childNodes.push(newChild);
-    } else {
-      for (var i = 0, len = childNodes.length; i < len; i++) {
-        var child = childNodes[i];
-        if (child === existingChild) {
-          i === 0 ? childNodes.unshift(newChild) : childNodes.splice(i, 0, newChild);
-          break;
-        }
-      }
-    }
-    newChild.parentElement = this;
-    return newChild;
-  };
-  Element.prototype.addEventListener = addEventListener;
-  Element.prototype.removeEventListener = removeEventListener;
-  Element.prototype.dispatchEvent = dispatchEvent;
-  Element.prototype.insertAdjacentHTML = function(position, text) {
-  };
-  Element.prototype.__defineGetter__("innerHTML", function() {
-    var s = this.childNodes.html || "";
-    this.childNodes.forEach(function(e) {
-      s += e.outerHTML || e.textContent;
-    });
-    return s;
-  });
-  Element.prototype.__defineSetter__("innerHTML", function(v) {
-    this.childNodes.length = 0;
-    this.childNodes.html = v;
-  });
-  Element.prototype.__defineGetter__("outerHTML", function() {
-    var a = [], self = this;
-    var VOID_ELEMENTS = {
-      AREA: true,
-      BASE: true,
-      BR: true,
-      COL: true,
-      EMBED: true,
-      HR: true,
-      IMG: true,
-      INPUT: true,
-      KEYGEN: true,
-      LINK: true,
-      META: true,
-      PARAM: true,
-      SOURCE: true,
-      TRACK: true,
-      WBR: true
-    };
-    function _stringify(arr) {
-      var attr = [], value;
-      arr.forEach(function(a2) {
-        value = a2.name != "style" ? a2.value : self.style.cssText;
-        attr.push(a2.name + '="' + escapeAttribute(value) + '"');
-      });
-      return attr.length ? " " + attr.join(" ") : "";
-    }
-    function _dataify(data) {
-      var attr = [], value;
-      Object.keys(data).forEach(function(name) {
-        attr.push("data-" + name + '="' + escapeAttribute(data[name]) + '"');
-      });
-      return attr.length ? " " + attr.join(" ") : "";
-    }
-    function _propertify() {
-      var props = [];
-      for (var key in self) {
-        var attrName = htmlAttributes.propToAttr(key);
-        if (self.hasOwnProperty(key) && ["string", "boolean", "number"].indexOf(typeof self[key]) !== -1 && htmlAttributes.isStandardAttribute(attrName, self.nodeName) && _shouldOutputProp(key, attrName)) {
-          props.push({name: attrName, value: self[key]});
-        }
-      }
-      return props ? _stringify(props) : "";
-    }
-    function _shouldOutputProp(prop, attr) {
-      if (self.getAttribute(attr)) {
-        return false;
-      } else {
-        if (prop === "className" && !self[prop]) {
-          return false;
-        }
-      }
-      return true;
-    }
-    var attrs = this.style.cssText ? this.attributes.concat([{name: "style"}]) : this.attributes;
-    a.push("<" + this.nodeName + _propertify() + _stringify(attrs) + _dataify(this.dataset) + ">");
-    if (!VOID_ELEMENTS[this.nodeName.toUpperCase()]) {
-      a.push(this.innerHTML);
-      a.push("</" + this.nodeName + ">");
-    }
-    return a.join("");
-  });
-  Element.prototype.__defineGetter__("textContent", function() {
-    var s = "";
-    this.childNodes.forEach(function(e) {
-      s += e.textContent;
-    });
-    return s;
-  });
-  Element.prototype.__defineSetter__("textContent", function(v) {
-    var textNode = new Text();
-    textNode.textContent = v;
-    this.childNodes = [textNode];
-    return v;
-  });
-  function escapeHTML(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
-  function escapeAttribute(s) {
-    return escapeHTML(s).replace(/"/g, "&quot;");
-  }
-  Element.prototype.nodeValue = null;
-  function Text() {
-  }
-  Text.prototype.nodeType = 3;
-  Text.prototype.nodeName = "#text";
-  Text.prototype.__defineGetter__("textContent", function() {
-    return escapeHTML(this.value || "");
-  });
-  Text.prototype.__defineSetter__("textContent", function(v) {
-    this.value = v;
-  });
-  Text.prototype.__defineGetter__("nodeValue", function() {
-    return escapeHTML(this.value || "");
-  });
-  Text.prototype.__defineSetter__("nodeValue", function(v) {
-    this.value = v;
-  });
-  Text.prototype.__defineGetter__("length", function() {
-    return (this.value || "").length;
-  });
-  Text.prototype.replaceData = function(offset, length, str) {
-    this.value = this.value.slice(0, offset) + str + this.value.slice(offset + length);
-  };
-  function Comment() {
-  }
-  Comment.prototype.nodeType = 8;
-  Comment.prototype.nodeName = "#comment";
-  Comment.prototype.__defineGetter__("data", function() {
-    return this.value;
-  });
-  Comment.prototype.__defineSetter__("data", function(v) {
-    this.value = v;
-  });
-  Comment.prototype.__defineGetter__("outerHTML", function() {
-    return "<!--" + escapeHTML(this.value || "") + "-->";
-  });
-  Comment.prototype.__defineGetter__("nodeValue", function() {
-    return escapeHTML(this.value || "");
-  });
-  Comment.prototype.__defineSetter__("nodeValue", function(v) {
-    this.value = v;
-  });
-  function defineParentNode(obj) {
-    obj.__defineGetter__("parentNode", function() {
-      return this.parentElement;
-    });
-  }
-  defineParentNode(Element.prototype);
-  defineParentNode(Comment.prototype);
-  defineParentNode(Text.prototype);
-  defineParentNode(Node.prototype);
-  module2.exports = {
-    Document,
-    Node,
-    Element,
-    Comment,
-    Text,
-    document: new Document(),
-    Event,
-    CustomEvent: Event
-  };
-});
-
 // tokens_all.js
 var require_tokens_all = __commonJS((exports2) => {
   exports2.tokens_all = [
@@ -9136,7 +8192,6 @@ var require_global_def = __commonJS((exports2) => {
   var path = require("path");
   var {grammar} = require_grammar();
   var nodeParser = require_dist();
-  var html_parent = require_html_element().document;
   var {tokens_all} = require_tokens_all();
   var {seleku_core} = require_seleku_core();
   exports2.CREATE_UUID = () => {
@@ -9152,7 +8207,7 @@ var require_global_def = __commonJS((exports2) => {
     return new Promise((resolve, reject) => {
       fs.open(file_name, "r", (err, data) => {
         fs.readFile(data, (err2, _data) => {
-          let a = _data.toString("utf-8").replace(/\<html>/igm, "#html").replace(/\<*\/html>/igm, "#html").replace(/\<style.*?\>/igm, "#css").replace(/\<*\/style>/igm, "#css").replace(/\<script.*?\>/igm, "#js").replace(/\<*\/script>/igm, "#js").split(/\n/);
+          let a = _data.toString("utf-8").replace(/\<html>/igm, "#html").replace(/\<*\/html>/igm, "#html").replace(/\<style.*?\>/igm, "#css").replace(/\<*\/style>/igm, "#css").replace(/\<script.*?\>/igm, "#js").replace(/\<*\/script>/igm, "#js").replace(/\#head#/igm, "#head").split(/\n/);
           let numbers = 0;
           let data_of_html = [];
           let elements = "";
@@ -9250,7 +8305,7 @@ var require_global_def = __commonJS((exports2) => {
     tag2[tag2["openTag"] = 0] = "openTag";
     tag2[tag2["closeTag"] = 1] = "closeTag";
   })(tag || (tag = {}));
-  exports2.AST = (args, lex, css, js, config) => {
+  exports2.AST = (args, lex, css, js, head, config) => {
     let openTag = [];
     let closeTag = [];
     for (let x = -1; x < args.length; x++) {
@@ -9334,6 +8389,53 @@ var require_global_def = __commonJS((exports2) => {
         });
       }
     };
+    let convert_others = (argv, something) => {
+      if (argv.parent && argv.text || argv.name && argv.parent) {
+        something.push({
+          parentElement: argv.parent,
+          tagName: argv.name,
+          id: argv.id,
+          text: argv.text,
+          parentId: argv.parentId,
+          attr: argv.attr
+        });
+      }
+      let index = 0;
+      if (argv.child.length > 0) {
+        argv.child.forEach(({...children}, _index) => {
+          if (children.childNodes.length > 0 && children.rawTagName) {
+            convert_others({
+              child: children.childNodes,
+              parent: argv.name,
+              parentId: argv.id,
+              id: CREATE_UUID2(),
+              name: children.rawTagName,
+              attr: children.rawAttrs
+            }, something);
+          } else {
+            convert_others({
+              child: children.childNodes,
+              parent: argv.name,
+              parentId: argv.id,
+              id: CREATE_UUID2(),
+              name: children.rawTagName,
+              attr: children.rawAttrs
+            }, something);
+          }
+          if (children.rawText && children.rawText.trim().length > 0) {
+            convert_others({
+              child: children.childNodes,
+              parent: argv.name,
+              parentId: argv.id,
+              text: children.rawText,
+              id: CREATE_UUID2(),
+              name: children.rawTagName,
+              attr: children.rawAttrs
+            }, something);
+          }
+        });
+      }
+    };
     let all_string = "";
     lex.forEach((el) => {
       el.forEach((result) => {
@@ -9372,24 +8474,47 @@ var require_global_def = __commonJS((exports2) => {
     $element = $element.filter(($el, _index) => {
       return !($el.tagName === void 0 && $el.text === void 0);
     });
+    let documentHead = fs.readFileSync(__dirname + "/DocumentHead.js").toString("utf-8");
     let config_file = fs.readFileSync(__dirname + "/user.config.js").toString("utf-8");
     let file_name = path.basename(config.file).match(/\.*\w*/)[0];
     let joss = fs.readFileSync(__dirname + "/joss.js").toString("utf-8");
     let seleku_embed = fs.readFileSync(__dirname + "/seleku-embbeded.js").toString("utf-8");
+    let dynamic_attribute = fs.readFileSync(__dirname + "/dynamic-attribute.js");
+    let JavaScript_from_dev = `(async ()=>{
+			//your javascript code will be show here
+
+			${js.join("\n").replace(/#js/, "")}
+		})();`;
+    let $head_data_parser = "";
+    head.forEach(($child) => {
+      $head_data_parser += $child.trim().replace("#head", "");
+    });
+    let $head_data = {...nodeParser.parse($head_data_parser)};
+    let $head_result = [];
+    convert_others({
+      child: $head_data.childNodes,
+      name: "head",
+      id: 0,
+      parentId: 0
+    }, $head_result);
+    $head_result = JSON.parse(JSON.stringify($head_result));
     let a = new grammar({
       path: config.dirOut,
       file_name: file_name + ".js",
       config: "",
-      content: `${!config.isComponent ? fs.readFileSync(__dirname + "/reactivity.js") : ""}
+      content: `
+		${!config.isComponent ? fs.readFileSync(__dirname + "/reactivity.js") : ""}
 		let components_${file_name} = [{name: "seleku-${file_name}",element: ${convertToText($element)}, css: \`${css.join(" ").replace(/\n/igm, " ").replace(/\#css/igm, "")}\`}];
 
+		let head_elements_${file_name} = ${convertToText($head_result)};
 		${!config.isComponent ? fs.readFileSync(__dirname + "/seleku-components.js") : ""}
 		${config_file.replace(/\@seleku_pre/igm, "components_" + file_name).replace(/\@seleku_selector/igm, `"${config.renderTarget}"`)}
-		${!config.isComponent ? joss : ""}
-		${!config.isComponent ? seleku_embed : ""}
-		${js.join("\n").replace(/#js/, "")}
+		${documentHead.replace(/\@head_components/igm, "head_elements_" + file_name)}
+		${!config.isComponent ? joss : ""}${!config.isComponent ? dynamic_attribute : ""}${!config.isComponent ? seleku_embed : ""}
+		${config.asyncMode === "on" ? JavaScript_from_dev : js.join("\n").replace(/#js/, "")}
 		`
     });
+    console.log(`${file_name}.seleku --> ${file_name}.js`, "color: orange");
     a.write();
   };
 });
@@ -9399,7 +8524,8 @@ var require_config = __commonJS((exports2) => {
   var declaration = [
     "#html",
     "#css",
-    "#js"
+    "#js",
+    "#head"
   ];
   exports2.declarate = (query) => {
     for (let decorator of declaration) {
@@ -9430,6 +8556,7 @@ module.exports.compile = async (args) => {
   let Html = [];
   let Css = [];
   let Js = [];
+  let Head = [];
   tokens.forEach((element2) => tokens_html.push(element2.string));
   let all_tokens_of_web = declarate(tokens_html.join("\n"));
   all_tokens_of_web.forEach((tokens_of_seleku) => {
@@ -9441,6 +8568,9 @@ module.exports.compile = async (args) => {
     }
     if (/\#*\js/igm.test(tokens_of_seleku)) {
       Js = [tokens_of_seleku];
+    }
+    if (/\#*\head/igm.test(tokens_of_seleku)) {
+      Head = [tokens_of_seleku];
     }
   });
   const lexer_result = Html.join("").split("\n").map((element2) => whitespaceLexer(element2));
@@ -9459,7 +8589,7 @@ module.exports.compile = async (args) => {
       }
     });
     final_data_to_ast[-1] = {el: [], col: -1, pos: -1, token: "", type: "nothing"};
-    AST(final_data_to_ast, lexer_result, Css, Js, args);
+    AST(final_data_to_ast, lexer_result, Css, Js, Head, args);
   };
   g();
 };

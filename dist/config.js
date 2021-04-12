@@ -1,7 +1,8 @@
 let declaration = [
     "#html",
     "#css",
-    "#js"
+    "#js",
+    "#head"
 ];
 exports.declarate = (query) => {
     for (let decorator of declaration) {
