@@ -321,7 +321,7 @@ let twoProps = {
 };
 ```
 ## Seleku Special Syntax
-#### di seleku juga terdapat beberapa syntax yang cukup uni atau spesial yang meiliki keguanaan dan fungsi tertentu
+#### di seleku juga terdapat beberapa syntax yang cukup unik atau spesial yang meiliki kegunaan dan fungsi tertentu
 #### 1. ```#head#```
 ##### #head# di gunakan untuk menempatkan suatu html element ke dalam tag head di html yang di tuju (seleku secara default hanya memanipulasi element di body) sebagai contoh jika ingin meletakan tag title di head dari seleku
 
